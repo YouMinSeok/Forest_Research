@@ -1,0 +1,170 @@
+/* 
+  1) 바깥 영역 (전체 화면)
+  - 숲 느낌의 배경 그라데이션
+  - 가운데 정렬
+*/
+.signup-outer {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  /* 은은한 그린 그라데이션 배경 */
+  background: linear-gradient(to bottom, #ecffec 0%, #ffffff 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+}
+
+/*
+  2) 고정 폭 컨테이너
+  - 폭 460px, 가장자리 radius 크게
+*/
+.signup-container {
+  width: 460px;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+/*
+  3) 회원가입 폼 박스
+  - 둥글게 (border-radius: 20px)
+  - 여백 넉넉히
+*/
+.signup-form {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* 제목, 설명 */
+.signup-title {
+  margin-bottom: 1rem;
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.signup-description {
+  margin-bottom: 1.5rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* 회원 유형(학생/교수) 선택 영역 */
+.signup-role-selection {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* 학생/교수 선택 버튼 (pill 스타일) */
+.signup-btn-role {
+  width: 120px;
+  padding: 0.8rem;
+  margin: 0 0.5rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(to right, #2e7d32, #66bb6a);
+  color: #fff;
+  transition: background 0.3s;
+}
+
+.signup-btn-role:hover {
+  background: linear-gradient(to right, #27672c, #4caf50);
+}
+
+/*
+  4) 실제 폼 요소
+  - 컨테이너가 좁아졌으므로 인풋 필드가 너무 길지 않음
+*/
+.signup-form-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.signup-form-group label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+/* 인풋 필드도 둥글게 */
+.signup-form-group input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 2px solid #b0e6b0;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.signup-form-group input:focus {
+  border-color: #2e7d32;
+}
+
+/*
+  5) 버튼들
+*/
+.signup-btn {
+  background: linear-gradient(to right, #2e7d32, #66bb6a);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.8rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 1rem;
+}
+
+.signup-btn:hover {
+  background: linear-gradient(to right, #27672c, #4caf50);
+}
+
+.signup-btn-fullwidth {
+  width: 100%;
+}
+
+.signup-btn-back {
+  background: none;
+  border: none;
+  color: #2e7d32;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.signup-btn-back:hover {
+  text-decoration: underline;
+}
+
+/*
+  6) 기타 링크
+*/
+.signup-extra {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.signup-link {
+  color: #2e7d32;
+  margin-left: 0.3rem;
+  text-decoration: none;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}

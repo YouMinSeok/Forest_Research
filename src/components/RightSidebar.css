@@ -1,0 +1,102 @@
+.right-sidebar {
+  width: 240px;
+  background-color: #ffffff; /* 사이드바 배경 흰색 유지 (원하시면 연한 녹색으로 바꿔도 OK) */
+  border-right: 1px solid #ddd;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* 논문 사이트 섹션 */
+.paper-card-area {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 1rem;
+}
+
+.paper-card-area h2,
+.quick-info h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2e7d32; 
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.3rem;
+}
+
+/* 카드 리스트 */
+.paper-card-list {
+  margin: 0;
+  padding: 0;
+}
+
+/* 
+   카드 전체를 숲 느낌으로:
+   - 테두리를 두껍고 연한 초록 dashed
+   - 배경은 아주 옅은 초록
+   - 모서리는 둥글게
+   - hover 시 더 진한 초록 배경 
+*/
+.paper-card-list li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  
+  /* 숲 느낌 테두리 */
+  border: 2px dashed #b0e6b0; 
+  border-radius: 12px;
+  
+  /* 옅은 연두색 배경 */
+  background-color: #f4fff4;
+
+  margin-bottom: 0.8rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+/* hover 시 더 진한 연두색, 테두리도 살짝 진하게 */
+.paper-card-list li:hover {
+  background-color: #ecffec; 
+  border-color: #a0dda0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 아이콘 */
+.paper-card-list img {
+  width: 60px;
+  height: auto;
+  max-height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: none;
+}
+
+/* 텍스트 */
+.paper-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.paper-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.paper-desc {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Quick Info */
+.quick-info ul {
+  margin: 0;
+  padding: 0;
+}
+
+.quick-info ul li {
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  border-bottom: 1px dotted #eee;
+  padding-bottom: 0.3rem;
+}

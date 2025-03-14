@@ -1,0 +1,87 @@
+/* 상단바 전체 */
+.topnav {
+  /* 연한 연녹색 그라데이션 배경 + 얇은 하단 경계선 */
+  background: linear-gradient(to bottom, #f9fff9 0%, #ffffff 70%, #f9fff9 100%);
+  border-bottom: 1px solid #ddd;
+
+  /* 상단 높이를 줄이기 위해 패딩 감소 (기존 0.5rem → 0.3rem) */
+  padding: 0.3rem 1rem;
+}
+
+/* 내부 레이아웃: 로고 - 메뉴 - 로그인/회원가입 정렬 */
+.topnav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 로고 섹션 */
+.topnav-left {
+  display: flex;
+  align-items: center;
+}
+
+/* 로고 이미지 (가로 200px, 세로 auto 유지) */
+.logo-img {
+  width: 200px;
+  height: auto;
+  margin-right: 1rem;
+}
+
+/* 상단 메뉴 */
+.topnav-menu ul {
+  display: flex;
+  gap: 1rem; /* 메뉴 항목 간격 */
+  margin: 0;
+  padding: 0;
+}
+
+/* 메뉴 항목 */
+.topnav-menu li {
+  list-style: none;
+
+  /* 상단바 높이를 더 줄이려면 내부 패딩도 축소 */
+  padding: 0.2rem 0.5rem;
+
+  /* 경계선: 너무 강하지 않도록 dotted + 옅은 색상 */
+  border-right: 1px dotted #eee;
+}
+
+.topnav-menu li:last-child {
+  border-right: none;
+}
+
+/* 메뉴 링크 */
+.topnav-menu a {
+  color: #333;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+  padding: 0.2rem 0.3rem; /* 클릭 영역 조금 확보 */
+}
+
+.topnav-menu a:hover {
+  background-color: #ecffec; /* 옅은 연두색 hover */
+  border-radius: 4px;
+}
+
+/* 로그인/회원가입 섹션 */
+.topnav-auth {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-link {
+  color: #666;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.auth-link:hover {
+  color: #2e7d32; /* 진초록 포인트 */
+}
+
+/* 구분선 (로그인 | 회원가입) */
+.divider {
+  color: #ccc;
+}
