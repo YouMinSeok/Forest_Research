@@ -1,111 +1,161 @@
-import React, { useState } from 'react';
+// src/pages/MainHome.jsx
+import React, { useState, useMemo } from 'react';
 import './MainHome.css';
 
 /**
- * 메인화면:
- * 1) 뉴스 섹션 (상단)
- * 2) 공지사항 섹션
- * 3) "연구" 부모 아래 자식 카테고리(전체, 연구자료, 제출자료, 제안서)
- *    - 각 자식 카테고리마다 개별 페이지네이션 (페이지당 5개 아이템)
- *    - 각 카테고리에는 게시글 제목만 보여주고, 클릭 시 해당 게시판으로 이동(현재 alert)
+ * 메인 홈 페이지 예시
+ *
+ * 섹션:
+ * 1) 뉴스
+ *    - 메인 뉴스 (큰 제목, 간략 내용, 날짜/출처)
+ *    - 그 외 뉴스 (2컬럼, 제목/날짜)
+ *
+ * 2) 공지사항
+ *
+ * 3) 연구 섹션
+ *    - 탭 (전체, 연구자료, 제출자료, 제안서) + 2컬럼 게시판
+ *    - 연구 게시글 데이터는 state로 관리되어 동기화됨.
+ *      (동적 게시글 추가 버튼은 제거했습니다.)
  */
+
 function MainHome() {
-  // 뉴스 섹션 데이터
-  const newsList = [
-    { id: 1, title: '박사까지 뚫는데 백수 30%, 역대 최고...', date: '2025-04-15' },
-    { id: 2, title: 'NCS 학술 발표, 대학원생들 관심 폭주', date: '2025-04-14' },
-    { id: 3, title: '대학원 온라인 세미나 개최 안내', date: '2025-04-13' },
+  // ---------- (1) 뉴스 섹션 ----------
+  const mainNews = {
+    id: 999,
+    title: '글로컬대학, 지역-대학 간 상생과 동반성장의 실질적...',
+    content:
+      '현 정부의 대표적인 지역대학 육성 정책인 "글로컬대학30"의 성공적인 시행...',
+    author: '대학저널In&Out',
+    date: '2025.03.08',
+  };
+
+  const otherNewsList = [
+    { id: 101, title: '파이카의 생태 서식지 변화', author: '환경저널', date: '2025.03.07' },
+    { id: 102, title: '대학 AI 논문 2배 성장', author: '뉴스N', date: '2025.03.06' },
+    { id: 103, title: '실험실 안전 관리 강화', author: 'LabInside', date: '2025.03.05' },
+    { id: 104, title: '교육부 협동 제출 자료 공고', author: '교수신문', date: '2025.03.04' },
+    { id: 105, title: '연구비 증액 요구 현황', author: '대학원Life', date: '2025.03.03' },
+    { id: 106, title: '국립보건연구원 연구성과 발표', author: '메디컬투데이', date: '2025.03.02' },
+    { id: 107, title: '학술 포럼 일정 안내', author: '학회소식', date: '2025.03.01' },
+    { id: 108, title: 'NCS 학술 발표 후기', author: '뉴스N', date: '2025.02.28' },
   ];
 
-  // 공지사항 섹션 데이터
+  // ---------- (2) 공지사항 섹션 ----------
   const noticeList = [
     { id: 1, title: '[필독] 제출자료 업로드 규칙', date: '2025-04-10' },
     { id: 2, title: '[업데이트] 연구자료 게시판 개선', date: '2025-04-08' },
     { id: 3, title: '[안내] 제안서 양식 변경', date: '2025-04-05' },
   ];
 
-  // 연구 섹션 자식 카테고리 및 게시글 데이터
+  // ---------- (3) 연구 섹션 (동기화 가능한 게시글 데이터) ----------
   const childCategories = ['전체', '연구자료', '제출자료', '제안서'];
-  const postsData = {
-    전체: [
-      '[전체] 논문 공유합니다',
-      '[전체] 세미나 일정 안내',
-      '[전체] 연구 협업 모집',
-      '[전체] AI 실험 결과',
-      '[전체] 실험 장비 대여 안내',
-      '[전체] 추가 게시글1',
-      '[전체] 추가 게시글2',
-    ],
+  const [researchPostsData] = useState({
     연구자료: [
-      '[연구자료] 최신 AI 논문 공유',
-      '[연구자료] 딥러닝 모델 코드 업로드',
-      '[연구자료] 데이터셋 정리',
-      '[연구자료] 추가 자료',
+      { id: 101, tag: '[연구자료]', title: '최신 AI 논문 공유', comments: 3 },
+      { id: 102, tag: '[연구자료]', title: '딥러닝 모델 코드 업로드', comments: 2 },
+      { id: 103, tag: '[연구자료]', title: '데이터셋 정리', comments: 4 },
+      { id: 104, tag: '[연구자료]', title: '추가 자료', comments: 1 },
     ],
     제출자료: [
-      '[제출자료] 4월 보고서 제출 안내',
-      '[제출자료] 논문 중간고사 대체 안내',
-      '[제출자료] 추가 자료 안내',
+      { id: 201, tag: '[제출자료]', title: '4월 보고서 제출 안내', comments: 3 },
+      { id: 202, tag: '[제출자료]', title: '논문 중간고사 대체 안내', comments: 5 },
+      { id: 203, tag: '[제출자료]', title: '추가 자료 안내', comments: 2 },
     ],
     제안서: [
-      '[제안서] 신규 연구 프로젝트 제안',
-      '[제안서] AR/VR 연구 제안서 업로드',
-      '[제안서] IoT 연구 방향 논의',
-      '[제안서] 추가 제안서',
+      { id: 301, tag: '[제안서]', title: '신규 연구 프로젝트 제안', comments: 1 },
+      { id: 302, tag: '[제안서]', title: 'AR/VR 연구 제안서 업로드', comments: 3 },
+      { id: 303, tag: '[제안서]', title: 'IoT 연구 방향 논의', comments: 4 },
+      { id: 304, tag: '[제안서]', title: '추가 제안서', comments: 2 },
     ],
-  };
-
-  // 페이지당 아이템 수
-  const pageSize = 5;
-  // 각 카테고리의 현재 페이지 상태 (객체: 카테고리 => 페이지 번호)
-  const [pageNumbers, setPageNumbers] = useState({
-    전체: 1,
-    연구자료: 1,
-    제출자료: 1,
-    제안서: 1,
   });
 
-  // 게시글 클릭 시 처리 (실제 구현: navigate() 이용)
-  const handleClickItem = (cat, title) => {
-    alert(`"${title}" 클릭됨\n(실제 구현 시, "/board/${cat}"로 이동)`);
-  };
-
-  // 페이지네이션 컨트롤: 특정 카테고리에 대해 이전/다음 페이지로 변경
-  const handlePrevPage = (cat) => {
-    setPageNumbers((prev) => ({
-      ...prev,
-      [cat]: prev[cat] > 1 ? prev[cat] - 1 : 1,
+  // "전체" 탭: 세 카테고리 합침 (동기화를 위해 useMemo 사용)
+  const allPosts = useMemo(() => {
+    return [
+      ...researchPostsData.연구자료,
+      ...researchPostsData.제출자료,
+      ...researchPostsData.제안서,
+    ].map(item => ({
+      ...item,
+      tag: item.tag.replace('[', '[전체/'),
     }));
+  }, [researchPostsData]);
+
+  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+  const currentPosts =
+    selectedCategory === '전체'
+      ? allPosts
+      : researchPostsData[selectedCategory] || [];
+  const totalPages = Math.ceil(currentPosts.length / pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const pageItems = currentPosts.slice(startIndex, endIndex);
+  const leftItems = pageItems.slice(0, 5);
+  const rightItems = pageItems.slice(5, 10);
+
+  // ---------- 핸들러 ----------
+  const handleMainNewsClick = () => {
+    alert(`메인 뉴스 클릭: ${mainNews.title}`);
+  };
+  const handleOtherNewsClick = (news) => {
+    alert(`"${news.title}" 클릭 ("/news/${news.id}" 이동)`);
   };
 
-  const handleNextPage = (cat) => {
-    const totalPages = Math.ceil((postsData[cat] || []).length / pageSize);
-    setPageNumbers((prev) => ({
-      ...prev,
-      [cat]: prev[cat] < totalPages ? prev[cat] + 1 : totalPages,
-    }));
+  const handleTabClick = (cat) => {
+    setSelectedCategory(cat);
+    setPage(1);
+  };
+  const handlePrevPage = () => {
+    if (page > 1) setPage(page - 1);
+  };
+  const handleNextPage = () => {
+    if (page < totalPages) setPage(page + 1);
+  };
+  const handlePostClick = (item) => {
+    alert(`[${item.tag}] "${item.title}" ("/board/${item.id}" 이동)`);
   };
 
-  // 렌더링: 각 카테고리 별로 개별 컬럼 (Flex Box)로 표시
   return (
     <div className="main-home-wrapper">
-      {/* 뉴스 섹션 */}
-      <section className="block news-section">
+      {/* ---------- 뉴스 섹션 ---------- */}
+      <section className="news-section">
         <h2 className="block-title">뉴스</h2>
-        <div className="news-list">
-          {newsList.map((news) => (
-            <div key={news.id} className="news-item">
-              <div className="news-head">
-                <span className="news-title">{news.title}</span>
-                <span className="news-date">{news.date}</span>
-              </div>
-            </div>
-          ))}
+        <div className="main-news" onClick={handleMainNewsClick}>
+          <div className="main-news-title">{mainNews.title}</div>
+          <div className="main-news-content">{mainNews.content}</div>
+          <div className="main-news-meta">
+            <span>{mainNews.author}</span>
+            <span>{mainNews.date}</span>
+          </div>
+        </div>
+        <div className="news-lr-container">
+          <ul className="news-list left">
+            {otherNewsList
+              .slice(0, Math.ceil(otherNewsList.length / 2))
+              .map((n) => (
+                <li key={n.id} className="news-item-row" onClick={() => handleOtherNewsClick(n)}>
+                  <span className="news-row-title">{n.title}</span>
+                  <span className="news-row-meta">{n.date}</span>
+                </li>
+              ))}
+          </ul>
+          <ul className="news-list right">
+            {otherNewsList
+              .slice(Math.ceil(otherNewsList.length / 2))
+              .map((n) => (
+                <li key={n.id} className="news-item-row" onClick={() => handleOtherNewsClick(n)}>
+                  <span className="news-row-title">{n.title}</span>
+                  <span className="news-row-meta">{n.date}</span>
+                </li>
+              ))}
+          </ul>
         </div>
       </section>
 
-      {/* 공지사항 섹션 */}
-      <section className="block notice-section">
+      {/* ---------- 공지사항 섹션 ---------- */}
+      <section className="notice-section">
         <h2 className="block-title">공지사항</h2>
         <div className="notice-list">
           {noticeList.map((notice) => (
@@ -117,68 +167,62 @@ function MainHome() {
         </div>
       </section>
 
-      {/* 연구 섹션 */}
-      <section className="block research-section">
-        <h2 className="research-title">연구</h2>
+      {/* ---------- 연구 섹션 (탭 + 2컬럼 게시판) ---------- */}
+      {/* 연구 섹션은 뉴스, 공지사항처럼 컨테이너 블럭 없이 처리 */}
+      <section className="research-section">
+        <h2 className="block-title">연구</h2>
         <hr className="research-divider" />
 
-        {/* 가로 탭 영역: 각 자식 카테고리별 게시글 목록 (개별 pagination 적용) */}
-        <div className="research-categories">
-          {childCategories.map((cat) => {
-            const currentPage = pageNumbers[cat];
-            const items = postsData[cat] || [];
-            const totalPages = Math.ceil(items.length / pageSize);
-            const visibleItems = items.slice(
-              (currentPage - 1) * pageSize,
-              currentPage * pageSize
-            );
+        {/* 탭 */}
+        <div className="research-tabs-container">
+          <ul className="research-tabs">
+            {childCategories.map((cat) => (
+              <li
+                key={cat}
+                className={`research-tab-item ${selectedCategory === cat ? 'active' : ''}`}
+                onClick={() => handleTabClick(cat)}
+              >
+                {cat}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-            return (
-              <div key={cat} className="category-column">
-                <div className="category-header">{cat}</div>
-                
-                {/* 게시글 영역 + 페이지네이션을 수직으로 배치 */}
-                <div className="category-body">
-                  {/* 게시글 목록 */}
-                  <div className="category-items">
-                    {visibleItems.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="category-item"
-                        onClick={() => handleClickItem(cat, item)}
-                      >
-                        {item}
-                      </div>
-                    ))}
-                    {visibleItems.length === 0 && (
-                      <div className="no-item">게시글이 없습니다.</div>
-                    )}
-                  </div>
+        {/* 2컬럼 게시판 */}
+        <div className="research-board-2col">
+          <div className="board-lr-container">
+            <ul className="board-list left">
+              {leftItems.map((item) => (
+                <li key={item.id} className="board-list-item" onClick={() => handlePostClick(item)}>
+                  <span className="board-tag">{item.tag}</span>
+                  <span className="board-title">{item.title}</span>
+                  <span className="board-comments">({item.comments})</span>
+                </li>
+              ))}
+            </ul>
+            <ul className="board-list right">
+              {rightItems.map((item) => (
+                <li key={item.id} className="board-list-item" onClick={() => handlePostClick(item)}>
+                  <span className="board-tag">{item.tag}</span>
+                  <span className="board-title">{item.title}</span>
+                  <span className="board-comments">({item.comments})</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-                  {/* 페이지네이션 영역 */}
-                  <div className="pagination">
-                    <button
-                      className="page-btn"
-                      onClick={() => handlePrevPage(cat)}
-                      disabled={currentPage === 1}
-                    >
-                      &lt;
-                    </button>
-                    <span className="page-info">
-                      {currentPage} / {totalPages}
-                    </span>
-                    <button
-                      className="page-btn"
-                      onClick={() => handleNextPage(cat)}
-                      disabled={currentPage === totalPages}
-                    >
-                      &gt;
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {/* 페이지네이션 */}
+          <div className="pagination" style={{ justifyContent: 'flex-end' }}>
+            <button className="page-btn" onClick={handlePrevPage} disabled={page <= 1}>
+              &lt;
+            </button>
+            <span className="page-info">
+              {page} / {totalPages}
+            </span>
+            <button className="page-btn" onClick={handleNextPage} disabled={page >= totalPages}>
+              &gt;
+            </button>
+          </div>
         </div>
       </section>
     </div>

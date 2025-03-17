@@ -1,11 +1,24 @@
+/* 
+  src/components/TopNav.css
+  - 상단 네비게이션 바(TopNav) 스타일
+  - 숲 느낌의 그라데이션 + 간단한 호버 애니메이션
+*/
+
 /* 상단바 전체 */
 .topnav {
   /* 연한 연녹색 그라데이션 배경 + 얇은 하단 경계선 */
   background: linear-gradient(to bottom, #f9fff9 0%, #ffffff 70%, #f9fff9 100%);
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ccc;
 
-  /* 상단 높이를 줄이기 위해 패딩 감소 (기존 0.5rem → 0.3rem) */
+  /* 살짝 fadeIn 애니메이션 */
+  animation: fadeIn 0.4s ease-in;
+
   padding: 0.3rem 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* 내부 레이아웃: 로고 - 메뉴 - 로그인/회원가입 정렬 */
@@ -39,11 +52,9 @@
 /* 메뉴 항목 */
 .topnav-menu li {
   list-style: none;
-
-  /* 상단바 높이를 더 줄이려면 내부 패딩도 축소 */
   padding: 0.2rem 0.5rem;
 
-  /* 경계선: 너무 강하지 않도록 dotted + 옅은 색상 */
+  /* 얇은 실선으로 변경 or dotted 유지 */
   border-right: 1px dotted #eee;
 }
 
@@ -55,13 +66,15 @@
 .topnav-menu a {
   color: #333;
   font-weight: 500;
-  transition: background-color 0.2s, color 0.2s;
-  padding: 0.2rem 0.3rem; /* 클릭 영역 조금 확보 */
+  padding: 0.2rem 0.3rem;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
 }
 
+/* 호버 시 살짝 배경 + 크기 확대 */
 .topnav-menu a:hover {
   background-color: #ecffec; /* 옅은 연두색 hover */
   border-radius: 4px;
+  transform: scale(1.05);
 }
 
 /* 로그인/회원가입 섹션 */

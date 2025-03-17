@@ -1,0 +1,78 @@
+/* src/components/CafeWritePost.css */
+
+.cafe-write-form {
+    max-width: 700px;
+    margin: 1rem auto;
+    padding: 1.2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    font-family: sans-serif;
+  }
+  
+  .cafe-write-form h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.3rem;
+    color: #2e7d32;
+    /* 아래 선 줄이거나 제거 가능 */
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+  }
+  
+  .form-row {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-row label {
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .form-row select,
+  .form-row input {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .form-row input::placeholder {
+    color: #aaa;
+  }
+  
+  /* Quill toolbar - 줄이거나 옅게 */
+  .ql-toolbar.ql-snow {
+    border: none; 
+    border-bottom: 1px solid #ccc; /* 하단만 선 */
+    padding: 0.5rem 0; 
+    margin-bottom: 0.3rem;
+  }
+  
+  /* Quill editor container */
+  .ql-container.ql-snow {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 150px;
+  }
+  
+  /* 작성 버튼 */
+  .submit-btn {
+    background-color: #2e7d32;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+  }
+  .submit-btn:hover {
+    background-color: #27672c;
+  }
+  
