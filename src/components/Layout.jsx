@@ -9,7 +9,7 @@ import './Layout.css';
 function Layout() {
   return (
     <div className="layout-container">
-      {/* 상단 */}
+      {/* 상단바 (자동 숨김 헤더) */}
       <TopNav />
 
       {/* 가운데 (왼쪽 + 중앙 + 오른쪽) */}

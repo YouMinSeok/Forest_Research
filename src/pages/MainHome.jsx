@@ -1,4 +1,3 @@
-// src/pages/MainHome.jsx
 import React, { useState, useMemo } from 'react';
 import './MainHome.css';
 
@@ -15,7 +14,6 @@ import './MainHome.css';
  * 3) 연구 섹션
  *    - 탭 (전체, 연구자료, 제출자료, 제안서) + 2컬럼 게시판
  *    - 연구 게시글 데이터는 state로 관리되어 동기화됨.
- *      (동적 게시글 추가 버튼은 제거했습니다.)
  */
 
 function MainHome() {
@@ -168,7 +166,6 @@ function MainHome() {
       </section>
 
       {/* ---------- 연구 섹션 (탭 + 2컬럼 게시판) ---------- */}
-      {/* 연구 섹션은 뉴스, 공지사항처럼 컨테이너 블럭 없이 처리 */}
       <section className="research-section">
         <h2 className="block-title">연구</h2>
         <hr className="research-divider" />

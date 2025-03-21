@@ -1,39 +1,68 @@
 // src/pages/boards/ResearchDataBoard.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CafeWritePost from '../../components/CafeWritePost';
+import { fetchBoardPosts, createBoardPost } from '../../api/board';
 import './BoardCommon.css';
 
 function ResearchDataBoard() {
-  const [posts, setPosts] = useState([]); // 초기 글 목록은 빈 배열
+  const [posts, setPosts] = useState([]);
   const [showWrite, setShowWrite] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  const handleSearch = () => alert('검색 기능(추후 구현)');
+  useEffect(() => {
+    const userData = sessionStorage.getItem("user") || localStorage.getItem("user");
+    setIsLoggedIn(!!userData);
+  }, []);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        const data = await fetchBoardPosts("연구자료");
+        setPosts(data);
+      } catch (error) {
+        console.error("게시글 로딩 에러:", error);
+      }
+    };
+    loadPosts();
+  }, []);
+
+  const handleSearch = () => {
+    alert("검색 기능(추후 구현)");
+  };
 
   const handleWriteButton = () => {
+    if (!isLoggedIn) {
+      alert("글 작성을 위해서는 로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
     setShowWrite(true);
   };
 
-  const handleWriteSubmit = (newPost) => {
-    setPosts([newPost, ...posts]);
-    setShowWrite(false);
+  const handleWriteSubmit = async (newPost) => {
+    try {
+      const response = await createBoardPost("연구자료", newPost);
+      setPosts([response, ...posts]);
+      setShowWrite(false);
+    } catch (error) {
+      console.error("글 작성 실패:", error);
+    }
   };
 
-  // 게시글 클릭 시, 상세 페이지로 이동 (예: /research/research-data/:postId)
   const handlePostClick = (post) => {
-    navigate(`/research/research-data/${post.id}`, { state: { post } });
+    navigate(`/community/연구자료/${post.id}`, { state: { post } });
   };
 
   return (
     <div className="board-page">
       <h2>연구자료 게시판</h2>
-
       {!showWrite && (
         <>
           <div className="board-top-bar">
             <div className="board-info">
-              총 게시물 <strong>{posts.length}</strong>건 / 페이지 <strong>1</strong>/<strong>?</strong>
+              총 게시물 <strong>{posts.length}</strong>건
             </div>
             <div className="board-search-area">
               <select className="board-filter">
@@ -44,10 +73,11 @@ function ResearchDataBoard() {
               </select>
               <input type="text" className="board-search-input" placeholder="검색어 입력" />
               <button className="board-search-btn" onClick={handleSearch}>검색</button>
-              <button className="write-btn" onClick={handleWriteButton}>글 작성</button>
+              {isLoggedIn && (
+                <button className="write-btn" onClick={handleWriteButton}>글 작성</button>
+              )}
             </div>
           </div>
-
           <table className="board-table">
             <thead>
               <tr>
@@ -60,15 +90,11 @@ function ResearchDataBoard() {
             </thead>
             <tbody>
               {posts.map((post, idx) => (
-                <tr
-                  key={post.id}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handlePostClick(post)}
-                >
+                <tr key={post.id} style={{ cursor: 'pointer' }} onClick={() => handlePostClick(post)}>
                   <td>{idx + 1}</td>
                   <td className="post-title">{post.title}</td>
                   <td>{post.writer}</td>
-                  <td>{post.date}</td>
+                  <td>{new Date(post.date).toLocaleDateString()}</td>
                   <td>{post.views}</td>
                 </tr>
               ))}
@@ -76,7 +102,6 @@ function ResearchDataBoard() {
           </table>
         </>
       )}
-
       {showWrite && (
         <CafeWritePost boardList={['연구자료']} onSubmit={handleWriteSubmit} />
       )}

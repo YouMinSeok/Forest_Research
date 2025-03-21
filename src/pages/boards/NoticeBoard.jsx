@@ -1,35 +1,68 @@
 // src/pages/boards/NoticeBoard.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CafeWritePost from '../../components/CafeWritePost';
+import { fetchBoardPosts, createBoardPost } from '../../api/board';
 import './BoardCommon.css';
 
 function NoticeBoard() {
   const [posts, setPosts] = useState([]);
   const [showWrite, setShowWrite] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  const handleSearch = () => alert('검색 기능(추후 구현)');
-  const handleWriteButton = () => setShowWrite(true);
-  const handleWriteSubmit = (newPost) => {
-    setPosts([newPost, ...posts]);
-    setShowWrite(false);
+  useEffect(() => {
+    const userData = sessionStorage.getItem("user") || localStorage.getItem("user");
+    setIsLoggedIn(!!userData);
+  }, []);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        const data = await fetchBoardPosts("공지사항");
+        setPosts(data);
+      } catch (error) {
+        console.error("게시글 로딩 에러:", error);
+      }
+    };
+    loadPosts();
+  }, []);
+
+  const handleSearch = () => {
+    alert("검색 기능(추후 구현)");
   };
 
-  // 게시글 클릭 시, 상세 페이지로 이동 (예: /board/notice/:postId)
+  const handleWriteButton = () => {
+    if (!isLoggedIn) {
+      alert("글 작성을 위해서는 로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+    setShowWrite(true);
+  };
+
+  const handleWriteSubmit = async (newPost) => {
+    try {
+      const response = await createBoardPost("공지사항", newPost);
+      setPosts([response, ...posts]);
+      setShowWrite(false);
+    } catch (error) {
+      console.error("글 작성 실패:", error);
+    }
+  };
+
   const handlePostClick = (post) => {
-    navigate(`/board/notice/${post.id}`, { state: { post } });
+    navigate(`/community/공지사항/${post.id}`, { state: { post } });
   };
 
   return (
     <div className="board-page">
       <h2>공지사항</h2>
-
       {!showWrite && (
         <>
           <div className="board-top-bar">
             <div className="board-info">
-              총 게시물 <strong>{posts.length}</strong>건 / 페이지 <strong>1</strong>/<strong>?</strong>
+              총 게시물 <strong>{posts.length}</strong>건
             </div>
             <div className="board-search-area">
               <select className="board-filter">
@@ -40,10 +73,11 @@ function NoticeBoard() {
               </select>
               <input type="text" className="board-search-input" placeholder="검색어 입력" />
               <button className="board-search-btn" onClick={handleSearch}>검색</button>
-              <button className="write-btn" onClick={handleWriteButton}>글 작성</button>
+              {isLoggedIn && (
+                <button className="write-btn" onClick={handleWriteButton}>글 작성</button>
+              )}
             </div>
           </div>
-
           <table className="board-table">
             <thead>
               <tr>
@@ -57,15 +91,11 @@ function NoticeBoard() {
             </thead>
             <tbody>
               {posts.map((post, idx) => (
-                <tr
-                  key={post.id}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handlePostClick(post)}
-                >
+                <tr key={post.id} style={{ cursor: 'pointer' }} onClick={() => handlePostClick(post)}>
                   <td>{idx + 1}</td>
                   <td className="post-title">{post.title}</td>
                   <td>{post.writer}</td>
-                  <td>{post.date}</td>
+                  <td>{new Date(post.date).toLocaleDateString()}</td>
                   <td>{post.views}</td>
                   <td>-</td>
                 </tr>
@@ -74,7 +104,6 @@ function NoticeBoard() {
           </table>
         </>
       )}
-
       {showWrite && (
         <CafeWritePost boardList={['공지사항']} onSubmit={handleWriteSubmit} />
       )}
