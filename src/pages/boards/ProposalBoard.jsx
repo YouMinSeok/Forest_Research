@@ -1,4 +1,3 @@
-// src/pages/boards/ProposalBoard.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BoardCommon from './BoardCommon';
@@ -9,24 +8,25 @@ function ProposalBoard() {
   const [posts, setPosts] = useState([]);
   const [showWrite, setShowWrite] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // 검색 관련 state
   const [searchFilter, setSearchFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userData =
-      sessionStorage.getItem('user') || localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user') || localStorage.getItem('user');
     setIsLoggedIn(!!userData);
   }, []);
 
   useEffect(() => {
     const loadPosts = async () => {
       try {
-        const data = await fetchBoardPosts('제안서');
-        setPosts(data);
+        // 연구 게시글 중 subcategory가 "제안서"인 것만 필터링
+        const allResearchPosts = await fetchBoardPosts('연구');
+        const proposalData = allResearchPosts.filter(
+          (post) => post.subcategory === '제안서'
+        );
+        const sortedData = proposalData.sort((a, b) => b.post_number - a.post_number);
+        setPosts(sortedData);
       } catch (error) {
         console.error('게시글 로딩 에러:', error);
       }
@@ -49,6 +49,7 @@ function ProposalBoard() {
 
   const handleWriteSubmit = async (newPost) => {
     try {
+      // "제안서"로 작성 → 백엔드에서 board="연구", subcategory="제안서" 처리됨
       const response = await createBoardPost('제안서', newPost);
       setPosts([response, ...posts]);
       setShowWrite(false);
@@ -75,7 +76,7 @@ function ProposalBoard() {
       handleWriteButton={handleWriteButton}
       handlePostClick={handlePostClick}
       handleWriteSubmit={handleWriteSubmit}
-      hasFileColumn={false} // 파일 열 없음
+      hasFileColumn={false}
     />
   );
 }

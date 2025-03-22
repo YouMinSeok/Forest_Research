@@ -1,4 +1,3 @@
-// src/pages/boards/NewsBoard.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BoardCommon from './BoardCommon';
@@ -9,16 +8,12 @@ function NewsBoard() {
   const [posts, setPosts] = useState([]);
   const [showWrite, setShowWrite] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // 검색 관련 state
   const [searchFilter, setSearchFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userData =
-      sessionStorage.getItem('user') || localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user') || localStorage.getItem('user');
     setIsLoggedIn(!!userData);
   }, []);
 
@@ -26,7 +21,9 @@ function NewsBoard() {
     const loadPosts = async () => {
       try {
         const data = await fetchBoardPosts('뉴스');
-        setPosts(data);
+        // 뉴스 게시판은 백엔드에서 정렬하지 않았다면
+        const sortedData = data.sort((a, b) => b.post_number - a.post_number);
+        setPosts(sortedData);
       } catch (error) {
         console.error('게시글 로딩 에러:', error);
       }
@@ -75,7 +72,7 @@ function NewsBoard() {
       handleWriteButton={handleWriteButton}
       handlePostClick={handlePostClick}
       handleWriteSubmit={handleWriteSubmit}
-      hasFileColumn={true} // 뉴스 게시판: 파일 열 있음
+      hasFileColumn={true}
     />
   );
 }

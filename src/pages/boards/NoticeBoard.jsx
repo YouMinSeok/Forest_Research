@@ -1,4 +1,3 @@
-// src/pages/boards/NoticeBoard.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BoardCommon from './BoardCommon';
@@ -9,16 +8,12 @@ function NoticeBoard() {
   const [posts, setPosts] = useState([]);
   const [showWrite, setShowWrite] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // 검색 관련 state
   const [searchFilter, setSearchFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userData =
-      sessionStorage.getItem('user') || localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user') || localStorage.getItem('user');
     setIsLoggedIn(!!userData);
   }, []);
 
@@ -26,7 +21,9 @@ function NoticeBoard() {
     const loadPosts = async () => {
       try {
         const data = await fetchBoardPosts('공지사항');
-        setPosts(data);
+        // post_number 기준 내림차순 정렬 (백엔드에도 적용되어 있다면 여기선 안전하게 정렬)
+        const sortedData = data.sort((a, b) => b.post_number - a.post_number);
+        setPosts(sortedData);
       } catch (error) {
         console.error('게시글 로딩 에러:', error);
       }
@@ -75,7 +72,7 @@ function NoticeBoard() {
       handleWriteButton={handleWriteButton}
       handlePostClick={handlePostClick}
       handleWriteSubmit={handleWriteSubmit}
-      hasFileColumn={true} // 공지사항: 파일 열 있음
+      hasFileColumn={true}
     />
   );
 }

@@ -1,4 +1,3 @@
-// src/pages/boards/SubmissionDataBoard.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BoardCommon from './BoardCommon';
@@ -9,24 +8,26 @@ function SubmissionDataBoard() {
   const [posts, setPosts] = useState([]);
   const [showWrite, setShowWrite] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // 검색 관련 state
   const [searchFilter, setSearchFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userData =
-      sessionStorage.getItem('user') || localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user') || localStorage.getItem('user');
     setIsLoggedIn(!!userData);
   }, []);
 
   useEffect(() => {
     const loadPosts = async () => {
       try {
-        const data = await fetchBoardPosts('제출자료');
-        setPosts(data);
+        // 백엔드에서는 연구 게시글을 board="연구"로 저장하므로,
+        // 여기서는 모든 연구 게시글 중 subcategory가 "제출자료"인 것만 필터링
+        const allResearchPosts = await fetchBoardPosts('연구');
+        const submissionData = allResearchPosts.filter(
+          (post) => post.subcategory === '제출자료'
+        );
+        const sortedData = submissionData.sort((a, b) => b.post_number - a.post_number);
+        setPosts(sortedData);
       } catch (error) {
         console.error('게시글 로딩 에러:', error);
       }
@@ -49,6 +50,7 @@ function SubmissionDataBoard() {
 
   const handleWriteSubmit = async (newPost) => {
     try {
+      // '제출자료'로 작성하면 백엔드에서는 board="연구", subcategory="제출자료" 처리됨
       const response = await createBoardPost('제출자료', newPost);
       setPosts([response, ...posts]);
       setShowWrite(false);
@@ -75,7 +77,7 @@ function SubmissionDataBoard() {
       handleWriteButton={handleWriteButton}
       handlePostClick={handlePostClick}
       handleWriteSubmit={handleWriteSubmit}
-      hasFileColumn={false} // 파일 열 없음
+      hasFileColumn={false}
     />
   );
 }
